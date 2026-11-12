@@ -52,8 +52,9 @@ lemma trivialK4Frame_transitive :
       trivialK4Frame.accessible w₁ w₂ →
         trivialK4Frame.accessible w₂ w₃ →
           trivialK4Frame.accessible w₁ w₃ := by
-  intro w₁ w₂ w₃ _h₁₂ _h₂₃
-  trivial
+  intro w₁ w₂ w₃ h₁₂ h₂₃
+  cases h₁₂
+  exact h₂₃
 
 /-- The one-world frame is Euclidean. -/
 lemma trivialK4Frame_euclidean :
@@ -61,8 +62,9 @@ lemma trivialK4Frame_euclidean :
       trivialK4Frame.accessible w₁ w₂ →
         trivialK4Frame.accessible w₁ w₃ →
           trivialK4Frame.accessible w₂ w₃ := by
-  intro w₁ w₂ w₃ _h₁₂ _h₁₃
-  trivial
+  intro w₁ w₂ w₃ h₁₂ h₁₃
+  cases h₁₂
+  exact h₁₃
 
 /-- The bundled modal-axiom soundness theorem fires on the concrete frame. -/
 lemma trivialK4Frame_basicModalAxiomsSound

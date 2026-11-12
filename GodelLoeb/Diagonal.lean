@@ -38,6 +38,7 @@ one-hole self-substitution construction.
 -/
 structure FixedpointStructuralEvidence (α : Type u) [DecidableEq α]
     (fixedpoint : ModalFormula α → ModalFormula α) (distinguishedAtom : α) where
+  /-- The one-hole formula template used for self-substitution. -/
   template : ModalFormula α → ModalFormula α
   fixedpoint_eq_subst :
     ∀ phi, fixedpoint phi =
