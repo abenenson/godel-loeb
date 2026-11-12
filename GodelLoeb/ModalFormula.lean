@@ -254,7 +254,14 @@ lemma fixedpoint_eq_subst_template {α : Type u} [DecidableEq α]
       subst a (diagonalTemplate a phi) (code (diagonalTemplate a phi)) :=
   rfl
 
+/-- Substitution into the diagonal template with its normalized code. -/
 @[simp]
+lemma subst_diagonalTemplate_kreiselFixed {α : Type u} [DecidableEq α]
+    (a : α) (phi : ModalFormula α) :
+    subst a (diagonalTemplate a phi) (kreiselFixed phi) = kreiselFixed phi := by
+  simp [diagonalTemplate, subst]
+
+/-- Self-substitution into the diagonal template produces the Kreisel fixed point. -/
 lemma subst_diagonalTemplate_self {α : Type u} [DecidableEq α]
     (a : α) (phi : ModalFormula α) :
     subst a (diagonalTemplate a phi) (code (diagonalTemplate a phi)) =
