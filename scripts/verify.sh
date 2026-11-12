@@ -228,7 +228,7 @@ check_lean() {
   proj_dir="$(cd "$(dirname "$f")" && while [[ ! -f "lakefile.lean" && ! -f "lakefile.toml" && "$PWD" != "/" ]]; do cd ..; done; pwd)"
 
   if [[ ! -f "$proj_dir/lakefile.lean" && ! -f "$proj_dir/lakefile.toml" ]]; then
-    warn "$f: no lakefile found — skipping lean checks"
+    fail "$f: no lakefile found — cannot run Lean checks"
     return
   fi
 
@@ -239,9 +239,15 @@ check_lean() {
   echo "" >> "$tmpfile"
   echo "#lint" >> "$tmpfile"
 
-  local output
-  output=$(cd "$proj_dir" && lake env lean "$tmpfile" 2>&1 || true)
+  local output lean_status=0
+  output=$(cd "$proj_dir" && lake env lean "$tmpfile" 2>&1) || lean_status=$?
   rm -f "$tmpfile"
+
+  if [[ $lean_status -ne 0 ]]; then
+    fail "$f: Lean exited with status $lean_status"
+    printf '%s\n' "$output" >&2
+    return
+  fi
 
   # Check for sorry
   if echo "$output" | grep -q "declaration uses 'sorry'"; then
@@ -250,10 +256,10 @@ check_lean() {
 
   # Check for lint errors
   local lint_errors
-  lint_errors=$(echo "$output" | grep -c "^error:" || true)
+  lint_errors=$(echo "$output" | grep -cE '(^|[[:space:]])error:' || true)
   if [[ $lint_errors -gt 0 ]]; then
     fail "$f: #lint reports $lint_errors error(s)"
-    echo "$output" | grep "^error:" | head -5 >&2
+    echo "$output" | grep -E '(^|[[:space:]])error:' | head -5 >&2
   fi
 }
 
