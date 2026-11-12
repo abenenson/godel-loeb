@@ -1,5 +1,7 @@
 # godel-loeb
 
+[![Lean CI](https://github.com/abenenson/godel-loeb/actions/workflows/lean_action_ci.yml/badge.svg?branch=main)](https://github.com/abenenson/godel-loeb/actions/workflows/lean_action_ci.yml)
+
 Lean 4 formalisation of the **modal-axiomatic** Loeb substrate, built
 directly on Mathlib. The library derives Loeb's theorem from
 intrinsic K4 plus a non-vacuous Kreisel diagonal interface, then
@@ -67,11 +69,18 @@ in formula evaluation.
 ```bash
 lake exe cache get
 lake build
-scripts/verify.sh --lean GodelLoeb
+scripts/verify.sh --lean GodelLoeb/ GodelLoeb.lean
 ```
 
 Lean is pinned in `lean-toolchain`; Mathlib is pinned in
 `lakefile.toml`.
+
+CI builds the library with warnings treated as errors, runs the repository's
+mechanical and Lean verifier checks, and compiles API documentation on pushes,
+pull requests, and manual runs. Documentation is available as the `api-docs`
+workflow artifact. Optional publication requires GitHub Pages to use GitHub
+Actions and the repository variable `PUBLISH_DOCS` to be `true`; publication then
+runs on pushes to `main`.
 
 To inspect trusted dependencies of headline declarations, run a Lean
 snippet such as:
